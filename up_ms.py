@@ -21,7 +21,7 @@ class APIRpolynomial(Resource):
             map(float, y.split(','))
         )
 
-class Information(object):
+class Information(Resource):
     def get(self):
         return render_template('Templates/information.html')
         
