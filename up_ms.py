@@ -6,7 +6,7 @@ from Services.Polynomial import Polynomial
 app = Flask(__name__)
 api = Api(app)
 
-class api_rmultiple(Resource):
+class APIRmultiple(Resource):
     def get(self, x1, x2, y):
         return Multiple().get_result(
             map( float, x1.split(',') ),
@@ -14,22 +14,31 @@ class api_rmultiple(Resource):
             map( float, y.split(',') )
         )
 
-class api_rpolynomial(Resource):
+class APIRpolynomial(Resource):
     def get(self, x, y):
         return Polynomial().get_result(
             map(float, x.split(',')),
             map(float, y.split(','))
         )
+
+class Information(object):
+    def get(self):
+        return render_template('Templates/information.html')
         
 
-api.add_resource(
-    api_rmultiple, 
+api.add_resource (
+    APIRmultiple, 
     '/rlm/<x1>/<x2>/<y>'
 )
 
-api.add_resource(
-    api_rpolynomial,
+api.add_resource (
+    APIRpolynomial,
     '/rp/<x>/<y>'
+)
+
+api.add_resource (
+    Information,
+    '/'
 )
 
 
