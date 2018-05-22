@@ -1,3 +1,4 @@
+import json
 
 class Multiple:
     def __init__(self):
@@ -73,7 +74,7 @@ class Multiple:
 
         self.clear()
 
-        return vjson
+        return json.dumps(vjson)
 
 if __name__ == '__main__':
     Multiple().get_result(
