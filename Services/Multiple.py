@@ -77,7 +77,7 @@ class Multiple:
         return json.dumps(vjson)
 
 if __name__ == '__main__':
-    Multiple().get_result(
+    print Multiple().get_result(
         [0,2,2.5,1,4,7],
         [0,1,2,3,6,2],
         [5,10,9,0,3,27]
