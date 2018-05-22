@@ -7,12 +7,11 @@ api = Api(app)
 
 class api_rmultiple(Resource):
     def get(self, x1, x2, y):
-        Multiple().get_result(
+        return Multiple().get_result(
             x1.split(','),
             x2.split(','),
             y.split(',')
         )
-        return 'Regresion Lineal Multiple'
         
 
 api.add_resource(
