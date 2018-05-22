@@ -56,19 +56,24 @@ class Multiple:
         self.set_x_at(x1)
         self.set_x_at(x2)
 
-        print 'X =',self.X
+        vjson = {}
+
+        vjson['X'] = self.X
 
         self.set_y(y)
 
-        print 'Y =',self.Y
+        vjson['Y'] = self.Y
 
         self.get_model()
 
-        print 'M =',self.M
-        print 'B =',self.B
+        vjson['M'] = self.M
+        vjson['B'] = self.B
+        
         print 'Falta usar gaus-jorgan'
 
         self.clear()
+
+        return vjson
 
 
 if __name__ == '__main__':
