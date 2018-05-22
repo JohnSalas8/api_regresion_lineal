@@ -52,7 +52,7 @@ class Multiple:
                 self.B[i] += self.X[i][j] * self.Y[j]
             
 
-    def main(self, x1, x2, y):
+    def get_result(self, x1, x2, y):
         self.set_x_at(x1)
         self.set_x_at(x2)
 
@@ -75,11 +75,8 @@ class Multiple:
 
         return vjson
 
-    def get(self):
-        return 'Regresion Lineal Multiple'
-
 if __name__ == '__main__':
-    Multiple().main(
+    Multiple().get_result(
         [0,2,2.5,1,4,7],
         [0,1,2,3,6,2],
         [5,10,9,0,3,27]
