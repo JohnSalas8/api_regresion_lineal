@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template, redirect
 from flask_restful import Resource, Api
 from Services.Multiple import Multiple
 from Services.Polynomial import Polynomial
@@ -23,7 +23,7 @@ class APIRpolynomial(Resource):
 
 class Information(Resource):
     def get(self):
-        return render_template('Templates/information.html')
+        return redirect('information.html')
         
 
 api.add_resource (
