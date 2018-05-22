@@ -69,12 +69,10 @@ class Multiple:
 
         vjson['M'] = self.M
         vjson['B'] = self.B
-        
-        print 'Falta usar gaus-jorgan'
 
         self.clear()
 
-        return json.dumps(vjson)
+        return json.dumps(vjson, indent=4)
 
 if __name__ == '__main__':
     print Multiple().get_result(
