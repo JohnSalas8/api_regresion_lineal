@@ -6,11 +6,19 @@ app = Flask(__name__)
 api = Api(app)
 
 class api_rmultiple(Resource):
-    def get(self):
+    def get(self, x1, x2, y):
+        Multiple().get_result(
+            x1.split(','),
+            x2.split(','),
+            y.split(',')
+        )
         return 'Regresion Lineal Multiple'
         
 
-api.add_resource(api_rmultiple, '/regresion_lineal_multiple')
+api.add_resource(
+    api_rmultiple, 
+    '/rlm/<x1>/<x2>/<y>'
+)
 
 
 if __name__ == '__main__':
