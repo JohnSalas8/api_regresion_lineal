@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 from flask_restful import Resource, Api
 from Services.Multiple import Multiple
 from Services.Polynomial import Polynomial
@@ -23,7 +23,7 @@ class APIRpolynomial(Resource):
 
 class Information(Resource):
     def get(self):
-        return redirect('information.html')
+        return redirect(url_for('information.html'))
         
 
 api.add_resource (
@@ -36,10 +36,9 @@ api.add_resource (
     '/rp/<x>/<y>'
 )
 
-api.add_resource (
-    Information,
-    '/'
-)
+@app.route('/')
+def root():
+    return render_template('information.html')
 
 
 if __name__ == '__main__':
