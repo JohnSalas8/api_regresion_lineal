@@ -102,10 +102,10 @@ class Multiple:
         vjson['AF'] = self.B
         vjson['MF'] = self.M
 
-        vjson['model'] = 'y = '
+        vjson['model'] = 'y ='
 
         for i in range(0, len(self.B)):
-            vjson['model'] += str(self.B[i])
+            vjson['model'] += ' ' + str(self.B[i])
             if i!=0:
                 vjson['model'] += 'x_' + str(i) + ' '
                 

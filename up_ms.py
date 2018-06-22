@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, jsonify
 from flask_restful import Resource, Api
 from Services.Multiple import Multiple
 from Services.Polynomial import Polynomial
+from Services.Simple import Simple
 
 app = Flask(__name__)
 api = Api(app)
@@ -27,10 +28,15 @@ def APIRpolynomial(x, y):
         )
     )
 
-# http://localhost/rls/
+# http://localhost:2409/rls/1,2,2,3,4,4,5,6/2,3,4,4,4,6,5,7
 @app.route('/rls/<x>/<y>')
 def APIRsimple(x, y):
-    pass
+    return jsonify(
+        Simple().get_result(
+            map(float, x.split(',')),
+            map(float, y.split(','))
+        )
+    )
 
 @app.route('/')
 def index():
@@ -38,5 +44,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(port=2409)
+    app.run(host='172.16.96.252', port=2409)
     
