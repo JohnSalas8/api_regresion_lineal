@@ -78,7 +78,18 @@ class Polynomial:
 
         self.clear()
 
-        return json.dumps(vjson, indent=4)
+        t = len(self.M)
+        for i in range(0, t-1):
+            p = self.M[i][i]
+            p2 = None
+            for j in range(0, t):
+                self.M[i][j] /= p
+                p2 = -self.M[i+1][j]
+                self.M[i+1][j] += p2
+            self.B[i] /= p
+            self.B[i] += p2
+
+        return vjson
 
 if __name__ == '__main__':
     print Polynomial().get_result(

@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 
 class Multiple:
     def __init__(self):
@@ -67,12 +68,43 @@ class Multiple:
 
         self.get_model()
 
-        vjson['M'] = self.M
-        vjson['B'] = self.B
+        vjson['M'] = deepcopy(self.M)
+        vjson['B'] = deepcopy(self.B)
 
-        self.clear()
+        t = len(self.M)
+        for i in range(0, t-1):
+            p = self.M[i][i]
+            for j in range(i, len(self.M)):
+                self.M[i][j] = self.M[i][j] / p
+            self.B[i] /= p
+            for j in range(i+1, len(self.M)):
+                p2 = -self.M[j][i]
+                for k in range(0, len(self.M)):
+                    self.M[j][k] = self.M[j][k] + p2 * self.M[i][k]
+                self.B[j] = self.B[j] + p2 * self.B[i]
+        
+        vjson['ME'] = deepcopy(self.M)
+        vjson['AE'] = deepcopy(self.B)
 
-        return json.dumps(vjson, indent=4)
+        i = len(self.M) -1
+        while i!=-1:
+            if self.M[i][i]!=1:
+                self.B[i] = self.B[i] / self.M[i][i]
+                self.M[i][i] = 1
+            j = i
+            while j!=0:
+                p = -self.M[j-1][i]
+                self.M[j-1][i] = self.M[j-1][i] + p * self.M[i][i]
+                self.B[j-1] = self.B[j-1] + p * self.B[i]
+                print self.M[j][i], p
+                j -= 1
+            print ''
+            i -= 1
+
+        vjson['AF'] = self.B
+        vjson['MF'] = self.M
+        
+        return vjson
 
 if __name__ == '__main__':
     print Multiple().get_result(
