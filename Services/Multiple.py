@@ -96,9 +96,7 @@ class Multiple:
                 p = -self.M[j-1][i]
                 self.M[j-1][i] = self.M[j-1][i] + p * self.M[i][i]
                 self.B[j-1] = self.B[j-1] + p * self.B[i]
-                print self.M[j][i], p
                 j -= 1
-            print ''
             i -= 1
 
         vjson['AF'] = self.B
