@@ -101,7 +101,14 @@ class Multiple:
 
         vjson['AF'] = self.B
         vjson['MF'] = self.M
-        
+
+        vjson['model'] = 'y = '
+
+        for i in range(0, len(self.B)):
+            vjson['model'] += str(self.B[i])
+            if i!=0:
+                vjson['model'] += 'x_' + str(i) + ' '
+                
         return vjson
 
 if __name__ == '__main__':
