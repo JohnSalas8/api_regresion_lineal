@@ -58,7 +58,7 @@ class Simple:
     
     # Genera la diagonal de unos con los ceros debajo
     def __gen_zero_down(self):
-        """ Genera la diagonal de unos con ceros debajo """"
+        """ Genera la diagonal de unos con ceros debajo """
         t = len(self.M)
         for i in range(0, t-1):
             p = self.M[i][i]
@@ -71,7 +71,7 @@ class Simple:
                     self.M[j][k] = self.M[j][k] + p2 * self.M[i][k]
                 self.B[j] = self.B[j] + p2 * self.B[i]
     
-    # La diagonal de unos ya esta hecha ahora hay que hacer ceros hacía arriba
+    # La diagonal de unos ya esta hecha ahora hay que hacer ceros hacia arriba
     def __gen_zero_up(self):
         """ Hace ceros los numeros arriba de la diagonal de unos; por eso
             se ejecuta primero __gen_zero_down """
@@ -89,13 +89,17 @@ class Simple:
             i -= 1
     
     # Concatena los datos para generar el modelo
-    def __gen_model(self):
+    def __get_model(self):
         """ Devuelve en String la cadena que hace referencia al modelo de regresion lineal """
         model = 'y ='
         for i in range(0, len(self.B)):
-            model += ' ' + str(self.B[i])
+            if self.B[i]>0:
+                model += ' + '
+            else:
+                model += ' '
+            model += str(self.B[i])
             if i!=0:
-                model += 'x_' + str(i) + ' '
+                model += 'x'
         return model
 
     def get_result(self, x, y):
@@ -117,7 +121,7 @@ class Simple:
         self.__gen_zero_down()  # Genera la diagonal de unos y ceros abajo
         
         vjson['ME'] = deepcopy(self.M)
-        vjson['AE'] = deepcopy(self.B)
+        vjson['AE'] = deepcopy(self.B)  # B se convierte en A
 
         self.__gen_zero_up()    # Genera los ceros arriba de la diagonal de unos
 
@@ -129,7 +133,19 @@ class Simple:
         return vjson
 
 if __name__ == '__main__':
-    print Simple().get_result(
-        [1,2,2,3,4,4,5,6],
-        [2,3,4,4,4,6,5,7]
+    X = []
+    Y = []
+
+    for x in [12, 10, 40, 50, 30]:
+        X.append(float(x))
+    
+    for y in [400, 390, 1200, 1900, 950]:
+        Y.append(float(y))
+
+    print json.dumps(
+        Simple().get_result(
+            X,
+            Y
+        ),
+        indent=4
     )
