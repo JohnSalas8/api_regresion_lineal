@@ -91,16 +91,20 @@ class Simple:
     # Concatena los datos para generar el modelo
     def __get_model(self):
         """ Devuelve en String la cadena que hace referencia al modelo de regresion lineal """
-        model = 'y ='
+        model = ''
         for i in range(0, len(self.B)):
             if self.B[i]>0:
-                model += ' + '
+                model += '+'
             else:
-                model += ' '
+                model += ''
             model += str(self.B[i])
             if i!=0:
                 model += 'x'
         return model
+    
+    def __gen_yi_w_model(self):
+        """ Generamos Yi por medio del modelo sustituyendo el valor de x """
+        pass
 
     def get_result(self, x, y):
         self.set_x_at(x)
