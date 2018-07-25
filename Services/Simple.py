@@ -21,7 +21,7 @@ class Simple:
         else:
             raise Exception('Ya existen coordenadas en y')
 
-    def get_model(self):
+    def gen_lineal_sys(self):
         """ Nos regresa el modelo de la regresion lineal """
         if not len(self.X) and not len(self.Y):
             raise Exception('Las coordenadas en X y/o Y no han sido asigandas')           
@@ -36,9 +36,10 @@ class Simple:
         self.M = []
         self.B = []
 
+    # M = X^t * X
     def __generate_m(self):
-        """ Esta funcion genera el vector M = Xt * X. Esta funcion es privada.
-            Y solo se ejecuta en la funcion get_model().
+        """ Esta funcion genera el vector M = X^t * X. Esta funcion es privada.
+            Y solo se ejecuta en la funcion gen_lineal_sys().
         """
         for i in range(0, len(self.X)):
             t = [0] * len(self.X)
@@ -47,29 +48,17 @@ class Simple:
                     t[j] += self.X[i][k] * self.X[j][k]
             self.M.append(t)
 
+    # B = X^t * Y
     def __generate_b(self):
+        """ Genera el vector B para armar el sistema lineal"""
         self.B = [0] * len(self.X)
         for i in range(0, len(self.X)):
             for j in range(0, len(self.Y)):
                 self.B[i] += self.X[i][j] * self.Y[j]
-            
-
-    def get_result(self, x, y):
-        self.set_x_at(x)
-
-        vjson = {}
-
-        vjson['X'] = self.X
-
-        self.set_y(y)
-
-        vjson['Y'] = self.Y
-
-        self.get_model()
-
-        vjson['M'] = deepcopy(self.M)
-        vjson['B'] = deepcopy(self.B)
-
+    
+    # Genera la diagonal de unos con los ceros debajo
+    def __gen_zero_down(self):
+        """ Genera la diagonal de unos con ceros debajo """"
         t = len(self.M)
         for i in range(0, t-1):
             p = self.M[i][i]
@@ -81,10 +70,11 @@ class Simple:
                 for k in range(0, len(self.M)):
                     self.M[j][k] = self.M[j][k] + p2 * self.M[i][k]
                 self.B[j] = self.B[j] + p2 * self.B[i]
-        
-        vjson['ME'] = deepcopy(self.M)
-        vjson['AE'] = deepcopy(self.B)
-
+    
+    # La diagonal de unos ya esta hecha ahora hay que hacer ceros hacía arriba
+    def __gen_zero_up(self):
+        """ Hace ceros los numeros arriba de la diagonal de unos; por eso
+            se ejecuta primero __gen_zero_down """
         i = len(self.M) -1
         while i!=-1:
             if self.M[i][i]!=1:
@@ -97,17 +87,45 @@ class Simple:
                 self.B[j-1] = self.B[j-1] + p * self.B[i]
                 j -= 1
             i -= 1
+    
+    # Concatena los datos para generar el modelo
+    def __gen_model(self):
+        """ Devuelve en String la cadena que hace referencia al modelo de regresion lineal """
+        model = 'y ='
+        for i in range(0, len(self.B)):
+            model += ' ' + str(self.B[i])
+            if i!=0:
+                model += 'x_' + str(i) + ' '
+        return model
+
+    def get_result(self, x, y):
+        self.set_x_at(x)
+
+        vjson = {}
+
+        vjson['X'] = self.X
+
+        self.set_y(y)
+
+        vjson['Y'] = self.Y
+
+        self.gen_lineal_sys()   # Genera los vectores M y B
+
+        vjson['M'] = deepcopy(self.M)
+        vjson['B'] = deepcopy(self.B)
+
+        self.__gen_zero_down()  # Genera la diagonal de unos y ceros abajo
+        
+        vjson['ME'] = deepcopy(self.M)
+        vjson['AE'] = deepcopy(self.B)
+
+        self.__gen_zero_up()    # Genera los ceros arriba de la diagonal de unos
 
         vjson['AF'] = self.B
         vjson['MF'] = self.M
 
-        vjson['model'] = 'y ='
+        vjson['model'] = self.__get_model() # Genera el formato del modelo
 
-        for i in range(0, len(self.B)):
-            vjson['model'] += ' ' + str(self.B[i])
-            if i!=0:
-                vjson['model'] += 'x_' + str(i) + ' '
-                
         return vjson
 
 if __name__ == '__main__':
