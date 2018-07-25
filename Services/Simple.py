@@ -1,10 +1,12 @@
 import json
+import math
 from copy import deepcopy
 
 class Simple:
     def __init__(self):
         self.X = []
         self.Y = []
+        self.Yi = []
         self.M = []
         self.B = []
 
@@ -33,8 +35,11 @@ class Simple:
     def clear(self):
         self.X = []
         self.Y = []
+        self.Yi = []
         self.M = []
         self.B = []
+        self.ssd = None
+        self.sse = None
 
     # M = X^t * X
     def __generate_m(self):
@@ -102,9 +107,35 @@ class Simple:
                 model += 'x'
         return model
     
-    def __gen_yi_w_model(self):
+    def __gen_yi_w_model(self, model):
         """ Generamos Yi por medio del modelo sustituyendo el valor de x """
-        pass
+        model = model.replace('x', '*(n)')
+        for x in self.X[1]:
+            self.Yi.append(eval(model.replace('n', str(x))))
+        
+        print self.Yi
+    
+    def __standar_deviation(self, model):
+        self.__gen_yi_w_model(model)
+        n =  len(self.Yi)
+        self.media = sum(self.Yi)/n
+
+        self.ssd = 0
+        for yi in self.Yi:
+            self.ssd += (yi-self.media)**2
+        
+        return ((self.ssd/(n-1))**.5)
+    
+    def __standar_error(self):
+        self.sse = 0
+        n = len(self.Yi)
+        for i in range(0, len(self.Yi)):
+            self.sse += (self.Yi[i] - self.Y[i])**2
+        
+        return ((self.sse/(n-2))**.5)
+    
+    def __coef_det(self):
+        return ((self.ssd / self.sse)-1)
 
     def get_result(self, x, y):
         self.set_x_at(x)
@@ -134,9 +165,18 @@ class Simple:
 
         vjson['model'] = self.__get_model() # Genera el formato del modelo
 
+        vjson['Sy'] = self.__standar_deviation(vjson['model'])  # Devuelve la desviacion estandar
+
+        vjson['Syx'] = self.__standar_error()   # Devuelve el error estandar
+
+        vjson['r2'] = self.__coef_det()    # Devuelve el coeficiente de determinacion
+
+        vjson['r'] = vjson['r2']**.5    # coeficiente de correlacion
+
         return vjson
 
 if __name__ == '__main__':
+    # ES MUY IMPORTANTE CASTEAR LOS DATOS DE LOS VECTORES X y Y A FLOTANTES
     X = []
     Y = []
 
