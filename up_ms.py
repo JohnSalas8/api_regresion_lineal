@@ -33,8 +33,8 @@ def APIRpolynomial(x, y):
 def APIRsimple(x, y):
     return jsonify(
         Simple().get_result(
-            map(float, x.split(',')),
-            map(float, y.split(','))
+            x,
+            y
         )
     )
 
