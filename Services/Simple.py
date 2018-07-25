@@ -1,5 +1,6 @@
 import json
 import math
+import sys
 from copy import deepcopy
 
 class Simple:
@@ -137,7 +138,19 @@ class Simple:
     def __coef_det(self):
         return ((self.ssd / self.sse)-1)
 
-    def get_result(self, x, y):
+    def get_result(self, xi, yi):
+        # ES MUY IMPORTANTE CASTEAR LOS DATOS DE LOS VECTORES X y Y A FLOTANTES
+        vec_x = (xi.replace(' ', '').replace('\t', '').replace('[', '').replace(']', '')).split(',')
+        vec_y = (yi.replace(' ', '').replace('\t', '').replace('[', '').replace(']', '')).split(',')
+        x = []
+        y = []
+
+        for x_i in vec_x:
+            x.append(float(x_i))
+        
+        for y_i in vec_y:
+            y.append(float(y_i))
+
         self.set_x_at(x)
 
         vjson = {}
@@ -176,20 +189,15 @@ class Simple:
         return vjson
 
 if __name__ == '__main__':
-    # ES MUY IMPORTANTE CASTEAR LOS DATOS DE LOS VECTORES X y Y A FLOTANTES
-    X = []
-    Y = []
-
-    for x in [12, 10, 40, 50, 30]:
-        X.append(float(x))
-    
-    for y in [400, 390, 1200, 1900, 950]:
-        Y.append(float(y))
-
-    print json.dumps(
-        Simple().get_result(
-            X,
-            Y
-        ),
-        indent=4
-    )
+    # Ej ... python Simple.py [12,10,40,50,30] [400,390,1200,1900,950]
+    if len(sys.argv)==3:
+        print json.dumps(
+            Simple().get_result(
+                sys.argv[1],
+                sys.argv[2]
+            ),
+            indent=4
+        )
+    else:
+        print "El primero y segundo argumento respectivamente son X y Y."
+        print "Tambien evite los espacios en blancos y tabuladores en ambas listas de datos."
